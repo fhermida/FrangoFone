@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="256d97f19aa448399d46e94049e0ace5" Name="Diagram1" ZoomLevel="86" >
+        <EntityTypeShape EntityType="FrangoFone.Cliente" Width="1.5" PointX="0.625" PointY="0.5" />
+        <EntityTypeShape EntityType="FrangoFone.Endereco" Width="1.5" PointX="4" PointY="0.5" />
+        <AssociationConnector Association="FrangoFone.ClienteEndereco" />
+        <EntityTypeShape EntityType="FrangoFone.Contato" Width="1.5" PointX="3.25" PointY="4.25" />
+        <AssociationConnector Association="FrangoFone.ClienteContato" />
+        <EntityTypeShape EntityType="FrangoFone.TipoContato" Width="1.5" PointX="6.5" PointY="4.625" />
+        <AssociationConnector Association="FrangoFone.TipoContatoContato" />
+        <EntityTypeShape EntityType="FrangoFone.Produto" Width="1.5" PointX="7.125" PointY="0.75" />
+        <EntityTypeShape EntityType="FrangoFone.ProdutoPreco" Width="1.5" PointX="9.75" PointY="0.5" />
+        <AssociationConnector Association="FrangoFone.ProdutoProdutoPreco" />
+        <EntityTypeShape EntityType="FrangoFone.Categoria" Width="1.5" PointX="10.125" PointY="3.5" />
+        <AssociationConnector Association="FrangoFone.CategoriaProduto" />
+        <EntityTypeShape EntityType="FrangoFone.Pedido" Width="1.5" PointX="11.875" PointY="0.5" />
+        <AssociationConnector Association="FrangoFone.ClientePedido" />
+        <EntityTypeShape EntityType="FrangoFone.TipoEntrega" Width="1.5" PointX="14.25" PointY="3.75" />
+        <AssociationConnector Association="FrangoFone.TipoEntregaPedido" />
+        <EntityTypeShape EntityType="FrangoFone.TipoPagamento" Width="1.5" PointX="16" PointY="1" />
+        <AssociationConnector Association="FrangoFone.TipoPagamentoPedido" />
+        <AssociationConnector Association="FrangoFone.PedidoEndereco" />
+        <EntityTypeShape EntityType="FrangoFone.ItemPedido" Width="1.5" PointX="13.875" PointY="0.5" />
+        <AssociationConnector Association="FrangoFone.PedidoItemPedido" />
+        <AssociationConnector Association="FrangoFone.ProdutoItemPedido" />
+        <EntityTypeShape EntityType="FrangoFone.Usuario" Width="1.5" PointX="0.5" PointY="5" />
+        <EntityTypeShape EntityType="FrangoFone.Permissao" Width="1.5" PointX="3" PointY="7.125" />
+        <AssociationConnector Association="FrangoFone.UsuarioPermissao" />
+        <AssociationConnector Association="FrangoFone.UsuarioCliente" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

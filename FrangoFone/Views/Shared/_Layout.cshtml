@@ -1,0 +1,94 @@
+﻿@using System.Web.Security; 
+@using FrangoFone.Domain;
+@using FrangoFone.Repository.Interface;
+@using FrangoFone.Repository.Concrete;   
+
+@{ 
+    UsuarioSet usuario = null;
+    IList<PermissaoMenuSet> lstPermissaoMenu = null;
+    IUsuarioRepository usuarioRepository = new UsuarioRepository();
+    IPermissaoMenuRepository permissaoMenuRepository = new PermissaoMenuRepository();
+    IMenuRepository menuRepository = new MenuRepository();
+
+    if (Request.IsAuthenticated)
+    {
+        usuario = usuarioRepository.ObterPorLogin(User.Identity.Name);
+
+        lstPermissaoMenu = permissaoMenuRepository.ObterTodos().Where(p => p.Permissao_Id == usuario.Permissao_Id).OrderBy(o=>o.MenuSet.nome).ToList();
+    }
+
+
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")        
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/inputmask")
+    @RenderSection("scripts", required: false)
+</head>
+<body>
+    <div id="loading" class="transparencia" style="position:absolute; top:60%; transform: translateY(-50%); display:none">
+            <img src="~/Images/loading.gif" width="200" height="200" style="position:absolute; top:35%; left:45%; background-color:white; border:solid; border-color:black;"/>
+    </div>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Frango Fone", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    
+                        @if (usuario != null)
+                        {
+
+                            <li>@Html.Label(string.Format("Olá, {0}", usuario.Nome), new { @class = "navbar-brand" });</li>
+                            <li>@Html.ActionLink("Sair", "Logout", "Login", new { area = "" }, null)</li>
+                        }
+                        else
+                        {
+                            <li>@Html.ActionLink("Entrar", "Login", "Login", new { area = "" }, null)</li>
+                        }
+                    
+                    
+                </ul>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Inicio", "Index", "Home", new { area = "" }, null)</li>
+
+                    @if (lstPermissaoMenu != null)
+                    {
+                        foreach (var item in lstPermissaoMenu)
+                        {
+                            MenuSet menu = menuRepository.ObterPorId(item.Menu_Id);
+
+                            <li>@Html.ActionLink(menu.nome, menu.action, menu.controller, new { area = "" }, null)</li>
+                        }
+                    }   
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="carregaDados">
+        <div class="container body-content">
+            @RenderBody()
+            <hr />
+            <footer>
+                <p>&copy; @DateTime.Now.Year - Sarger IT - Applications</p>
+            </footer>
+        </div>
+    </div>
+</body>
+</html>

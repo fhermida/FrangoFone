@@ -1,0 +1,189 @@
+﻿@using FrangoFone.Models
+
+@model IEnumerable<ListaPedidoClienteViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+<div class="form-horizontal">
+    <div class="form-group">
+        @Html.Label("Busca:", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-xs-3">
+            @Html.TextBox("buscaPedido", null, htmlAttributes: new { @class = "form-control" })
+        </div>
+    </div>
+</div>
+<table class="table" id="detalhesPedido">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.IdPedido)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NomeCliente)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EnderecoEntrega)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TipoEntrega)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TipoPagamento)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DataPedido)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ValorTotal)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Login)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr id="@item.IdPedido">
+            <td>
+                @Html.DisplayFor(modelItem => item.IdPedido)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NomeCliente)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EnderecoEntrega)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TipoEntrega)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TipoPagamento)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataPedido)
+            </td>
+            <td id="statusCell">
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ValorTotal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Login)
+            </td>
+            <td>
+                <a class="btn-link" data-toggle="collapse" data-target="#detalhesPedido_@item.IdPedido" aria-expanded="false">Detail</a> |
+                <a tabindex="0" data-placement="top" id="@item.IdPedido" class="btn-link" role="button" data-toggle="popover" data-trigger="focus" title="Alterar Status Pedido">Status</a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="11" style="border-top:0px; padding:0px">
+                <div class="collapse" id="detalhesPedido_@item.IdPedido">
+                        <table class="table">
+                            <tr>
+                                <th>@Html.DisplayName("Produto")</th>
+                                <th>@Html.DisplayName("Valor Produto")</th>
+                                <th>@Html.DisplayName("Quantidade")</th>
+                                <th>@Html.DisplayName("Valor")</th>
+                            </tr>
+                            @foreach (var itemPedido in item.ListaDetalhesItensPedido)
+                            {
+                             <tr>
+                                 <td>@itemPedido.NomeProduto</td>
+                                 <td>@itemPedido.ValorProduto.ToString("#.#,0")</td>
+                                 <td>@itemPedido.Quantidade.ToString()</td>
+                                 <td>@itemPedido.Valor.ToString("#.#,0")</td>
+                             </tr>
+                            }
+                        </table>
+                </div>
+            </td>
+        </tr>
+    }
+
+</table>
+<script type="text/javascript">
+
+
+    $(function () {
+
+        $("a[data-toggle='popover']").popover({
+            html: true,
+            delay: 1000,
+        }).on("blur", function () {
+
+            $(this).popover("hide");
+
+        });
+
+        $(document).on("click", "a[data-toggle='popover']", function () {
+
+            var id = $(this).attr("id");
+            
+            $.getJSON('@Url.Action("ObterListaStatusPedido")', null, function (data) {
+                var ul = "";
+                ul = "<ul>";
+                $.each(data, function (i, v) {
+                    ul += "<li><a name='btnStatus' id='" + v + "_" + id + "' class='btn-link'>" + v + "</a></li>";
+                });
+                ul += "</ul>";
+
+                $("a[id='" + id + "']").attr("data-content", ul);
+            });
+
+        });
+
+        $("#buscaPedido").on("keyup blur", function () {
+
+            $("#detalhesPedido").find("tr").hide();
+
+            var data = $(this).val().split(" ");
+
+            var bd = $("#detalhesPedido").find("tr");
+
+            $.each(data, function (i, v) {
+
+                bd = bd.filter(function () {
+                    return $(this).text().toLowerCase().indexOf(v.toLowerCase()) > -1;
+                });
+            });
+
+            bd.show();
+
+        });
+
+        $("a[data-toggle='collapse']").click(function () {
+
+            var id = $(this).attr("data-target");
+            $(id).parent().parent().show();
+            $(id).children().find("tr").show();
+            
+        });
+
+        $(document).on("click", "a[name='btnStatus']", function () {
+            var status = $(this).text();
+            var idPedido = $(this).attr("id").split("_")[1];
+            
+            $.getJSON('@Url.Action("AtualizaStatusPedido")', { idPedido: idPedido, status: status }, function (data) {
+
+                if (data.sucesso) {
+                    $("tr[id='" + idPedido + "']").find("td[id='statusCell']").text(status);
+                }
+
+            });
+        });
+       
+    });
+
+</script>

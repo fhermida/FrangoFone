@@ -1,0 +1,50 @@
+﻿@model FrangoFone.Domain.ProdutoPrecoSet
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ProdutoPrecoSet</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ProdutoSet.Nome)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProdutoSet.Nome)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Valor)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Valor)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.InicioVigencia)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.InicioVigencia)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FimVigencia)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FimVigencia)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

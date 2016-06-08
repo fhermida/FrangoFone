@@ -1,0 +1,105 @@
+﻿@model FrangoFone.Domain.PedidoSet
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>PedidoSet</h4>
+    <hr />
+    <dl class="dl-horizontal">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ClienteSet.Nome)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ClienteSet.Nome)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ClienteSet.Sobrenone)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ClienteSet.Sobrenone)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EnderecoSet.Logradouro)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EnderecoSet.Logradouro)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TipoEntregaSet.Nome)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TipoEntregaSet.Nome)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TipoPagamentoSet.Nome)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TipoPagamentoSet.Nome)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DataPedido)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DataPedido)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Obs)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Obs)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UsuarioSet.Login)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UsuarioSet.Login)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

@@ -1,0 +1,27 @@
+﻿@using FrangoFone.Domain
+@model IEnumerable<EnderecoSet>
+
+<div class="form-horizontal">
+    <div style="overflow:auto; height:200px">
+        <table class="table" id="enderecos">
+            <tr id="header">
+                <th>
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Logradouro)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Numero)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Bairro)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Complemento)
+                </th>
+            </tr>
+
+       </table>
+    </div>
+    <hr />
+</div>

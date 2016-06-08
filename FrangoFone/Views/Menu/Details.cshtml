@@ -1,0 +1,58 @@
+﻿@model FrangoFone.Domain.MenuSet
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>MenuSet</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.nome)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.nome)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.action)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.action)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.controller)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.controller)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.route)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.route)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ativo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ativo)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

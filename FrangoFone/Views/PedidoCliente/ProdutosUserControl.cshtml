@@ -1,0 +1,176 @@
+﻿@model IEnumerable<FrangoFone.Domain.ProdutoSet>
+
+<div class="form-horizontal">
+    <hr />
+    <div class="form-group">
+        @Html.Label("Busca:", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-xs-3">
+            @Html.TextBox("buscaProduto", null, htmlAttributes: new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div style="overflow:auto; height:300px">
+        <table class="table" id="ProdutosPedido">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nome)
+                </th>
+                <th>
+                    @Html.DisplayName("Categoria")
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Descricao)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Quantidade)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Valor)
+                </th>
+            </tr>
+            
+            @{ 
+
+                if (Model != null)
+                {
+
+                    int i = 0;
+
+                    foreach (var item in Model)
+                    {
+                <tr id="@item.Id">
+                    <td>
+                        @Html.Hidden("ItensPedido[" + i + "].Produto", item.Id, htmlAttributes: new { @class = "form-control", @Id = item.Id })
+                        @Html.DisplayFor(modelItem => item.Nome) 
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CategoriaSet.Nome)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Descricao)
+                    </td>
+                    <td class="col-xs-1">
+                        @Html.TextBox("ItensPedido[" + i + "].Quantidade", "0", htmlAttributes: new { @class = "form-control", @Id = item.Id })
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Valor)
+                        @Html.Hidden("Valor", item.Valor, htmlAttributes: new { @id = item.Id })
+                    </td>
+                </tr>
+
+                            i++;
+                        }
+                    }
+                }
+
+        </table>
+    </div>
+    <hr />
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        
+        $("#buscaProduto").on("keyup blur", function () {
+            $("#ProdutosPedido").find("tr").hide();
+
+            var data = $(this).val().split(" ");
+
+            var bd = $("#ProdutosPedido").find("tr");
+
+            $.each(data, function (i, v) {
+
+                bd = bd.filter(function () {
+                    return $(this).text().toLowerCase().indexOf(v.toLowerCase()) > -1;
+                });
+            });
+
+            bd.show();
+
+        });
+
+
+        $("[name*='Quantidade']").blur(function () {
+            var obj = $(this);
+
+            atribuiZeroNaQuantidade(obj)
+            atualizaValorPedido();
+            atualizaItensPedido(obj);
+            
+        });
+
+        $("[name*='Quantidade']").focus(function () {
+            if ($(this).val() == "0") {
+                $(this).val("");
+            }
+
+        });
+
+    });
+
+    function atualizaValorPedido() {
+
+        var totalCompra = 0.00;
+
+        $("[name*='Quantidade']").each(function (i, v) {
+            var qtd = parseFloat(v.value) || 0
+            var valor = parseFloat($("[id='" + v.id + "'][name*='Valor']").val().replace(",", ".")) || 0.00
+            totalCompra = parseFloat(totalCompra) + (qtd * valor);
+        })
+
+        $("[for='ValorCompra']").text(totalCompra.toFixed(2).replace(".", ","));
+    }
+
+    function atualizaItensPedido(obj) {
+
+        if (obj.val() > 0) {
+
+            var trProd = $("#ProdutosPedido").find("tr[id='" + obj.attr("id") + "']").clone();
+
+            var id = obj.attr("id");
+            var tdProd = trProd.children("td");
+            var nome = $(tdProd[0]).text();
+            var cat = $(tdProd[1]).text();
+            var desc = $(tdProd[2]).text();
+            var qtd = $(tdProd[3]).children("input[type='text']").val();
+            var valTot = qtd * parseFloat($(tdProd[4]).text().replace(",", "."));
+
+
+            var trItens = $("#ItensPedido").find("tr[id='" + obj.attr("id") + "']");
+
+            if (trItens.attr("id") == obj.attr("id")) {
+
+                var tdItens = trItens.children("td");
+                $(tdItens[3]).text(qtd);
+                $(tdItens[4]).text(valTot.toFixed(2).replace(".", ","));
+                return;
+            }
+
+            var strTr = "<tr id='" + id + "'>";
+            strTr += "<td>" + nome + "</td>";
+            strTr += "<td>" + cat + "</td>";
+            strTr += "<td>" + desc + "</td>";
+            strTr += "<td>" + qtd + "</td>";
+            strTr += "<td>" + valTot.toFixed(2).replace(".", ",") + "</td>";
+            strTr += "</tr>";
+
+            $("#ItensPedido").append(strTr);
+        }
+        else {
+
+            $("#ItensPedido").find("tr[id='" + obj.attr("id") + "']").remove();
+
+        }
+
+
+    }
+
+    function atribuiZeroNaQuantidade(obj) {
+
+        if (obj.val() == "" || obj.val() < 0) {
+            obj.val("0");
+        }
+    }
+
+
+</script>

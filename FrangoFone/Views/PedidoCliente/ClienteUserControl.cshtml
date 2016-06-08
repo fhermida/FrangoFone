@@ -1,0 +1,123 @@
+﻿@using FrangoFone.Domain;
+@model IEnumerable<ClienteSet>
+    
+
+<div class="form-horizontal">
+    <hr />
+    <div class="form-group">
+        @Html.Label("Busca:", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-xs-3">
+            @Html.TextBox("buscaCliente", null, htmlAttributes: new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div style="overflow:auto; height:200px">
+        <table class="table" id="ItensCliente">
+            <tr>
+                <th>
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nome)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Sobrenone)
+                </th>
+                <th>
+                    Contato
+                </th>
+            </tr>
+
+                @if (Model != null)
+                {
+
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                           <td>
+                                @Html.RadioButton("Cliente", item.Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Nome)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Sobrenone)
+                            </td>
+                            <td>
+
+                                @{
+                                    var strContatos = "";
+                                    foreach (var contato in item.ContatoSet)
+                                    {
+                                        strContatos = string.Concat(strContatos, contato.TipoContatoSet.Nome + ":" + contato.Valor, ";");
+                                    }
+                                    if (!string.IsNullOrEmpty(strContatos))
+                                    {
+                                        strContatos = strContatos.Remove(strContatos.Length - 1, 1);
+                                    }
+
+                                    @strContatos
+
+                                 }
+                            </td>
+                        </tr>
+                    }                        
+                }   
+                  
+        </table>
+    </div>
+    <hr />
+</div>
+
+<script type="text/javascript">
+    $(function () {
+
+        $("#buscaCliente").on("keyup blur", function () {
+            $("#ItensCliente").find("tr").hide();
+
+            var data = $(this).val().split(" ");
+
+            var bd = $("#ItensCliente").find("tr");
+
+            $.each(data, function (i, v) {
+
+                bd = bd.filter(function () {
+                    return $(this).text().toLowerCase().indexOf(v.toLowerCase()) > -1;
+                });
+            });
+
+            bd.show();
+
+        });
+
+        $(":radio[name=Cliente]").change(function () {
+
+            var id = $(this).val();
+
+            $("#enderecos").find("tr").not("tr[id='header']").remove();
+
+            var tr = $("#enderecos").find("tr");
+            
+            var trEnd = "";
+
+            $.getJSON('@Url.Action("ObterEnderecos")', { Cliente: id }, function (data) {
+                
+                $.each(data, function (i, v) {
+                    
+                    trEnd += "<tr>";
+                    trEnd += "<td><input id='Endereco' name='Endereco' type='radio' value='"+data[i].Id+"'></td>";
+                    trEnd += "<td>" + data[i].Logradouro + "</td>";
+                    trEnd += "<td>" + data[i].Numero + "</td>";
+                    trEnd += "<td>" + data[i].Bairro + "</td>";
+                    trEnd += "<td>" + data[i].Complemento + "</td>";
+                    trEnd += "</tr>";
+                });
+
+                tr.after(trEnd);
+
+            });
+
+           
+            
+        });
+    });
+</script>

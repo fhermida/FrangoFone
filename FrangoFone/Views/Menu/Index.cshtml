@@ -1,0 +1,57 @@
+﻿@model IEnumerable<FrangoFone.Domain.MenuSet>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.nome)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.action)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.controller)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.route)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ativo)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.nome)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.action)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.controller)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.route)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ativo)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>

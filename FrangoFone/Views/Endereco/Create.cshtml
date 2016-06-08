@@ -1,0 +1,162 @@
+﻿@using FrangoFone.Domain;
+@model EnderecoSet
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>EnderecoSet</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.Label("ClienteId", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.Partial("ClienteUserControl", ViewBag.ClienteId as List<ClienteSet>, new ViewDataDictionary { {"idCliente", Model == null? 0 : Model.ClienteId } } )
+                @Html.ValidationMessage("ClienteId", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Logradouro, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Logradouro, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Logradouro, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Numero, htmlAttributes: new { @class = "control-label col-md-2", maxlegth = "6" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Numero, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Numero, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Complemento, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Complemento, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Complemento, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CEP, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.CEP, htmlAttributes: new { @class = "form-control", maxlength = "8" } )
+                <input type="button" id="buscar" value="Buscar" class="btn btn-default" />
+                @Html.ValidationMessageFor(model => model.CEP, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Bairro, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Bairro, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Bairro, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Municipio, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Municipio, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Municipio, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Estado, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Estado, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#Numero, #CEP").on("keyup keydown",function () {
+
+            $("#Numero, #CEP").val(function (i, v) {
+
+                if (/^[a-zA-Z0-9- ]*$/.test(v) == false) {
+                    v = v.replace(v.substr(v.length - 1, 1), "");
+                }
+
+                if (!jQuery.isNumeric(v)) {
+                    v = v.replace(v.substr(v.length - 1, 1), "");
+                }
+
+                return v;
+
+            }).val();
+        });
+
+        $("#buscar").click(function () {
+
+            var validacep = /^[0-9]{8}$/;
+
+            var cep = $("#CEP").val()
+
+            if (validacep.test(cep)) {
+
+                $("#Logradouro").val("...");
+                $("#Bairro").val("...");
+                $("#Municipio").val("...");
+                $("#Estado").val("...");
+                $("#Complemento").val("...");
+
+                $.getJSON('@Url.Action("ObterEndereco")', { cep: cep }, function (data) {
+              
+                    if (!("erro" in data)) {
+                        $("#Logradouro").val(data.Logradouro);
+                        $("#Bairro").val(data.Bairro);
+                        $("#Municipio").val(data.Municipio);
+                        $("#Estado").val(data.Estado);
+                        $("#Complemento").val(data.Complemento);
+                    }
+                    else {
+                       
+                        $("#Logradouro").val("");
+                        $("#Bairro").val("");
+                        $("#Municipio").val("");
+                        $("#Estado").val("");
+                        $("#Complemento").val();
+                        $("span[data-valmsg-for='CEP']").text("CEP não encontrado.");
+                    }
+
+                });
+            }
+            else {
+
+                $("#Logradouro").val("");
+                $("#Bairro").val("");
+                $("#Municipio").val("");
+                $("#Estado").val("");
+                $("#Complemento").val("");
+                $("span[data-valmsg-for='CEP']").text("CEP inválido.");
+            }
+            
+        });
+
+    });
+</script>
