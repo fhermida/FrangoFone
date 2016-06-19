@@ -8,19 +8,31 @@
                 <th>
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Logradouro)
+                    @Html.DisplayName("Logradouro")
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Numero)
+                    @Html.DisplayName("Numero")
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Bairro)
+                    @Html.DisplayName("Bairro")
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Complemento)
+                    @Html.DisplayName("Complemento")
                 </th>
             </tr>
-
+               @if(Model != null)
+               {
+                   foreach (var item in Model)
+                   {
+                       <tr>
+                           <td><input id="Endereco" name="Endereco" type="radio" value="@item.Id"></td>
+                           <td>@item.Logradouro</td>
+                           <td>@item.Numero</td>
+                           <td>@item.Bairro</td>
+                           <td>@item.Complemento</td>
+                       </tr>
+                   }
+               }
        </table>
     </div>
     <hr />

@@ -38,25 +38,25 @@
 
                     foreach (var item in Model)
                     {
-                <tr id="@item.Id">
-                    <td>
-                        @Html.Hidden("ItensPedido[" + i + "].Produto", item.Id, htmlAttributes: new { @class = "form-control", @Id = item.Id })
-                        @Html.DisplayFor(modelItem => item.Nome) 
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CategoriaSet.Nome)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Descricao)
-                    </td>
-                    <td class="col-xs-1">
-                        @Html.TextBox("ItensPedido[" + i + "].Quantidade", "0", htmlAttributes: new { @class = "form-control", @Id = item.Id })
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Valor)
-                        @Html.Hidden("Valor", item.Valor, htmlAttributes: new { @id = item.Id })
-                    </td>
-                </tr>
+                        <tr id="@item.Id">
+                            <td>
+                                @Html.Hidden("ItensPedido[" + i + "].Produto", item.Id, htmlAttributes: new { @class = "form-control", @Id = item.Id })
+                                @Html.DisplayFor(modelItem => item.Nome) 
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CategoriaSet.Nome)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Descricao)
+                            </td>
+                            <td class="col-xs-1">
+                                @Html.TextBox("ItensPedido[" + i + "].Quantidade", "0", htmlAttributes: new { @class = "form-control", @Id = item.Id })
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Valor)
+                                @Html.Hidden("Valor", item.Valor, htmlAttributes: new { @id = item.Id })
+                            </td>
+                        </tr>
 
                             i++;
                         }

@@ -35,7 +35,7 @@
                 <h3 class="panel-title">Endereco</h3>
             </div>
             <div class="panel-body">
-               @Html.Partial("EnderecoUserControl")
+               @Html.Partial("EnderecoUserControl", ViewBag.Enderecos as List<EnderecoSet>)
                @Html.ValidationMessage("Endereco", new { @class = "text-danger" })
             </div>
         </div>
@@ -55,7 +55,7 @@
                 <h3 class="panel-title">Itens Pedido</h3>
             </div>
             <div class="panel-body">
-                @Html.Partial("ItensPedidoUserControl")
+                @Html.Partial("ItensPedidoUserControl")                                 
                 </div>
             </div>
 

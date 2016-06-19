@@ -116,7 +116,7 @@ namespace FrangoFone.EntryPoint.Controllers
 
             if (!model.ItensPedido.Any(p => p.Quantidade > 0))
             {
-                ModelState.AddModelError("ItensPedido", "A Quantidade dos itens do pedido deve ser maior que zero!");
+                ModelState.AddModelError("ProdutosPedido", "A Quantidade dos itens do pedido deve ser maior que zero!");
             }
            
             if (ModelState.IsValid)
