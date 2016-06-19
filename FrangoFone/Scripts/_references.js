@@ -1,6 +1,7 @@
 ﻿/// <autosync enabled="true" />
 /// <reference path="app-connect-signalr.js" />
 /// <reference path="bootstrap.js" />
+/// <reference path="enviapedidocozinha.js" />
 /// <reference path="jquery.inputmask/inputmask.date.extensions.js" />
 /// <reference path="jquery.inputmask/inputmask.extensions.js" />
 /// <reference path="jquery.inputmask/inputmask.js" />
