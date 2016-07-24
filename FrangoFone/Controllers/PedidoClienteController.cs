@@ -7,10 +7,9 @@ using FrangoFone.Repository.Concrete;
 using FrangoFone.Repository.Interface;
 using FrangoFone.Providers;
 using FrangoFone.Domain;
-using FrangoFone.Models;
-using FrangoFone.Infraestructure;
+using FrangoFone.Models;         
 using System.Web.Security;
-using Newtonsoft.Json;
+using FrangoFone.EntryPoint.SignalR;
 
 namespace FrangoFone.EntryPoint.Controllers
 {
@@ -154,6 +153,9 @@ namespace FrangoFone.EntryPoint.Controllers
                 //ImpressaoCupom imprimir = new ImpressaoCupom();
                 //imprimir.EscreverNoDispositivo(pedido.Obs);
 
+                PedidosCozinha pedidosNaCozinha = new PedidosCozinha();
+                pedidosNaCozinha.AtualizarPedidos(model);
+
                 return RedirectToAction("Create");
             }
 
@@ -207,6 +209,12 @@ namespace FrangoFone.EntryPoint.Controllers
             var listEnums = Enum.GetNames(typeof(StatusPedidoEnum)).ToList();
 
             return Json(listEnums, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult PedidosCozinha()
+        {
+            return View("PedidosCozinha");
         }
 
 

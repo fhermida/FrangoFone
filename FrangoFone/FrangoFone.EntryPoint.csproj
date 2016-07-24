@@ -321,7 +321,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
-    <Content Include="Scripts\pedidoCozinha.js" />
+    <Content Include="Scripts\PedidosCozinha.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Web.config">
@@ -425,6 +425,7 @@
     <Content Include="Views\PedidoCliente\DetalhesClienteUserControl.cshtml" />
     <Content Include="Views\Endereco\ClienteUserControl.cshtml" />
     <Content Include="Views\PedidoCliente\ItensPedidoUserControl.cshtml" />
+    <Content Include="Views\PedidoCliente\PedidosCozinha.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

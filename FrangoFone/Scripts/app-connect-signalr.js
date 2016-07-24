@@ -1,5 +1,5 @@
 ﻿var connector = connector || {};
 $(function () {
-    appCozinha = $.connection.cozinha;
+    connector = $.connection.pedidosCozinha;
     $.connection.hub.start();
 });
