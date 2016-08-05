@@ -26,7 +26,7 @@ namespace FrangoFone.Domain
         public virtual DbSet<TipoContatoSet> TipoContatoSet { get; set; }
         public virtual DbSet<TipoEntregaSet> TipoEntregaSet { get; set; }
         public virtual DbSet<TipoPagamentoSet> TipoPagamentoSet { get; set; }
-        public virtual DbSet<UsuarioSet> UsuarioSet { get; set; }
+        public virtual DbSet<UsuarioSet> UsuarioSet { get; set; }  
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

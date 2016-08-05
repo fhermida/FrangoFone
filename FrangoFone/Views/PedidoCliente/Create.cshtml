@@ -6,11 +6,22 @@
     ViewBag.Title = "Create";
 }
 
+@if (ViewBag.PedidoCriado != null)
+{
+    <div id="pedidoCriado" class="transparencia" style="position:absolute; top:60%; transform: translateY(-50%); display:block">
+        <div style="position:absolute; top:35%; left:45%; background-color:white; border:solid; border-color:black;">
+            O Pedido foi realizado com Sucesso! <br />
+            Número: @ViewBag.PedidoCriado
+        </div>
+        
+    </div>
+}
 
 <h2>Create</h2>
 
-@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "carregaDados", InsertionMode = InsertionMode.Replace, HttpMethod = "POST", LoadingElementId="loading"}))
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "carregaDados", InsertionMode = InsertionMode.Replace, HttpMethod = "POST", LoadingElementId = "loading" }))
 {
+        
 
     @Html.AntiForgeryToken()
 
@@ -116,6 +127,10 @@
 
         $("#Cliente").focus();
 
+        $("#pedidoCriado").click(function () {
+            $("#pedidoCriado").hide();
+            window.location.href = "./Create";
+        });
     });
 
 </script>

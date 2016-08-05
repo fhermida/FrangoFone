@@ -155,8 +155,11 @@ namespace FrangoFone.EntryPoint.Controllers
 
                 PedidosCozinha pedidosNaCozinha = new PedidosCozinha();
                 pedidosNaCozinha.AtualizarPedidos(model);
+                
+                //retorna id do pedido pra ser exibido na tela.
+                ViewBag.PedidoCriado = pedido.Id;
 
-                return RedirectToAction("Create");
+                //return View("create");
             }
 
             CarregarDropDown(model);

@@ -13,6 +13,7 @@ namespace FrangoFone.EntryPoint.SignalR
     {
         public void AtualizarPedidos(dynamic pedido)
         {
+
             var context = GlobalHost.ConnectionManager.GetHubContext<PedidosCozinha>();
             context.Clients.All.AtualizarPedidosCozinha(pedido);
         }
