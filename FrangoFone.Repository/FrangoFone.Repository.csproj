@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Concrete\AreaPedidoRepository.cs" />
     <Compile Include="Concrete\CategoriaRepository.cs" />
     <Compile Include="Concrete\ClienteRepository.cs" />
     <Compile Include="Concrete\ContatoRepository.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="Concrete\ProdutoPrecoRepository.cs" />
     <Compile Include="Concrete\TipoEntregaRepository.cs" />
     <Compile Include="Concrete\TipoPagamentoRepository.cs" />
+    <Compile Include="Interface\IAreaPedidoRepository.cs" />
     <Compile Include="Interface\IItemPedidoRepository.cs" />
     <Compile Include="Interface\IMenuRepository.cs" />
     <Compile Include="Interface\IPedidoRepository.cs" />

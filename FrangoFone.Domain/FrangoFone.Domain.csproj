@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AreaPedidoSet.cs" />
     <Compile Include="CategoriaSet.cs" />
     <Compile Include="ClienteSet.cs" />
     <Compile Include="ContatoSet.cs" />

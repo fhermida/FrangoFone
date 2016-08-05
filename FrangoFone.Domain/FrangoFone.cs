@@ -27,6 +27,7 @@ namespace FrangoFone.Domain
         public virtual DbSet<TipoEntregaSet> TipoEntregaSet { get; set; }
         public virtual DbSet<TipoPagamentoSet> TipoPagamentoSet { get; set; }
         public virtual DbSet<UsuarioSet> UsuarioSet { get; set; }  
+        public virtual DbSet<AreaPedidoSet> AreaPedidoSet { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -34,6 +35,12 @@ namespace FrangoFone.Domain
                 .HasMany(e => e.ProdutoSet)
                 .WithRequired(e => e.CategoriaSet)
                 .HasForeignKey(e => e.CategoriaId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<AreaPedidoSet>()
+                .HasMany(e => e.ProdutoSet)
+                .WithRequired(e => e.AreaPedidoSet)
+                .HasForeignKey(e => e.AreaPedidoId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<ClienteSet>()

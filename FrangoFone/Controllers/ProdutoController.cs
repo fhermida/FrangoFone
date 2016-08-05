@@ -19,6 +19,7 @@ namespace FrangoFone.EntryPoint.Controllers
     {
         private IProdutoRepository produtoRepository = new ProdutoRepository();
         private ICategoriaRepository categoriaRepository = new CategoriaRepository();
+        private IAreaPedidoRepository areaPedidoRepository = new AreaPedidoRepository();
 
         // GET: Produto
         public ActionResult Index()
@@ -46,6 +47,7 @@ namespace FrangoFone.EntryPoint.Controllers
         public ActionResult Create()
         {
             ViewBag.CategoriaId = new SelectList(categoriaRepository.ObterTodos(), "Id", "Nome");
+            ViewBag.AreaPedidoId = new SelectList(areaPedidoRepository.ObterTodos(), "Id", "Nome");
             return View();
         }
 
@@ -54,7 +56,7 @@ namespace FrangoFone.EntryPoint.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Nome,Descricao,Quantidade,Ativo,CategoriaId,Valor")] ProdutoSet produtoSet)
+        public ActionResult Create([Bind(Include = "Id,Nome,Descricao,Quantidade,Ativo,CategoriaId,AreaPedidoId,Valor")] ProdutoSet produtoSet)
         {
             if (ModelState.IsValid)
             {
@@ -63,6 +65,7 @@ namespace FrangoFone.EntryPoint.Controllers
             }
 
             ViewBag.CategoriaId = new SelectList(categoriaRepository.ObterTodos(), "Id", "Nome", produtoSet.CategoriaId);
+            ViewBag.AreaPedidoId = new SelectList(areaPedidoRepository.ObterTodos(), "Id", "Nome", produtoSet.AreaPedidoId);
             return View(produtoSet);
         }
 
@@ -79,6 +82,7 @@ namespace FrangoFone.EntryPoint.Controllers
                 return HttpNotFound();
             }
             ViewBag.CategoriaId = new SelectList(categoriaRepository.ObterTodos(), "Id", "Nome", produtoSet.CategoriaId);
+            ViewBag.AreaPedidoId = new SelectList(areaPedidoRepository.ObterTodos(), "Id", "Nome", produtoSet.AreaPedidoId);
             return View(produtoSet);
         }
 
@@ -87,7 +91,7 @@ namespace FrangoFone.EntryPoint.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Nome,Descricao,Quantidade,Ativo,CategoriaId,Valor")] ProdutoSet produtoSet)
+        public ActionResult Edit([Bind(Include = "Id,Nome,Descricao,Quantidade,Ativo,CategoriaId,AreaPedidoId,Valor")] ProdutoSet produtoSet)
         {
             if (ModelState.IsValid)
             {
@@ -95,6 +99,7 @@ namespace FrangoFone.EntryPoint.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.CategoriaId = new SelectList(categoriaRepository.ObterTodos(), "Id", "Nome", produtoSet.CategoriaId);
+            ViewBag.AreaPedidoId = new SelectList(areaPedidoRepository.ObterTodos(), "Id", "Nome", produtoSet.AreaPedidoId);
             return View(produtoSet);
         }
 

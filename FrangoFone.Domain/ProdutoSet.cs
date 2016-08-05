@@ -30,11 +30,15 @@ namespace FrangoFone.Domain
 
         public int CategoriaId { get; set; }
 
+        public int AreaPedidoId { get;  set; }
+
         [Column(TypeName = "money")]
         public decimal Valor { get; set; }
 
         public virtual CategoriaSet CategoriaSet { get; set; }
 
+        public virtual AreaPedidoSet AreaPedidoSet { get; set; }
+                        
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemPedidoSet> ItemPedidoSet { get; set; }
 
