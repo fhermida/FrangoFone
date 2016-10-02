@@ -7,13 +7,21 @@
 }
 
 @if (ViewBag.PedidoCriado != null)
-{
+  {
     <div id="pedidoCriado" class="transparencia" style="position:absolute; top:60%; transform: translateY(-50%); display:block">
-        <div style="position:absolute; top:35%; left:45%; background-color:white; border:solid; border-color:black;">
-            O Pedido foi realizado com Sucesso! <br />
-            Número: @ViewBag.PedidoCriado
-        </div>
         
+        <div class="panel panel-primary" style="position:absolute; top:35%; left:40%; opacity:0.9">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    O Pedido foi realizado com Sucesso! 
+                    <input type="button" name="fechar" id="fechar" value="X" class="btn btn-default btn-xs pull-right" />
+                </h3>
+            </div>
+            <div class="panel-body">
+                Pedido: @ViewBag.PedidoCriado
+            </div>
+        </div>
+
     </div>
 }
 
@@ -127,7 +135,7 @@
 
         $("#Cliente").focus();
 
-        $("#pedidoCriado").click(function () {
+        $("#pedidoCriado, #fechar").click(function () {
             $("#pedidoCriado").hide();
             window.location.href = "./Create";
         });

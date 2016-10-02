@@ -10,6 +10,7 @@
 /// <reference path="jquery.inputmask/inputmask.regex.extensions.js" />
 /// <reference path="jquery.inputmask/jquery.inputmask.js" />
 /// <reference path="jquery.moneymask.js" />
+/// <reference path="jquery.playsound.js" />
 /// <reference path="jquery.signalr-2.1.2.min.js" />
 /// <reference path="jquery.unobtrusive-ajax.min.js" />
 /// <reference path="jquery.validate.js" />

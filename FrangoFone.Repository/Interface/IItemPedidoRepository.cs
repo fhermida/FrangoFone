@@ -9,5 +9,6 @@ namespace FrangoFone.Repository.Interface
 {
     public interface IItemPedidoRepository:IRepository<ItemPedidoSet>,IDisposable
     {
+        List<ItemPedidoSet> ObterPorIdPedido(int idPedido);
     }
 }

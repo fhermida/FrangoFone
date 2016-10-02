@@ -8,9 +8,10 @@ namespace FrangoFone.Domain
 {
     public enum StatusPedidoEnum
     {
-        Aberto = 1,
-        Pago = 2,
-        Entrege = 3,
-        Cancelado = 4,
+        Realizado   = 1,
+        Produzido   = 2,
+        Entrege     = 3,
+        Pago        = 4,
+        Cancelado   = 5,
     }
 }

@@ -6,83 +6,108 @@ using System.Threading.Tasks;
 using System.IO;
 using NLog;
 using System.Runtime.InteropServices;
-
+using FrangoFone.Infraestructure.MP2032DLL;
+using System.Configuration;
 
 namespace FrangoFone.Infraestructure
 {
-    
-    public enum codigoRetonoMecaf
-    {
-        MECAFCOD_RET_SUCESSO = 0,
-    }
-
-    public class ImpressaoCupom    : IDisposable
+   
+    public class ImpressaoCupom : IDisposable
     {
         private Logger logger = LogManager.GetCurrentClassLogger();
-        private bool portaAberta = false;
-
-        [DllImport("MEGENCOM32.dll")]
-        static extern int MEGENCOM32_AbrirDispositivo(string Porta, int Velocidade, byte Paridadee, int NumBits, int NumStopbits, int CtrlFluxo);
-
-        [DllImport("MEGENCOM32.dll")]
-         static extern int MEGENCOM32_FecharDispositivo(string Porta);
-
-        [DllImport("MEGENCOM32.dll")]
-         static extern int MEGENCOM32_EscrevernoDispositivo(string Porta, string Buffer, long NumBytes, ref long? BytesEscritos);
+        private int Retorno = 0;
+        private string porta = ConfigurationManager.AppSettings["PortaImpressao"];
+        private string ipImpressora = ConfigurationManager.AppSettings["IpImpressora"];
 
         public ImpressaoCupom()
         {
-            AbrirDispositivo();
+            
         }
 
         private void AbrirDispositivo()
         {
-            long retorno;
 
-            retorno = MEGENCOM32_AbrirDispositivo("COM4", 9600, Byte.Parse("S"), 8, 1, 1);
 
-            if (retorno != (int) codigoRetonoMecaf.MECAFCOD_RET_SUCESSO)
+            Retorno = MP2032.ConfiguraModeloImpressora(7);
+
+            if (Retorno <= 0)
             {
-                logger.Error("Problema ao abrir comunicação com a impressora.Erro:{0}", retorno);
+                logger.Error("Não foi possivel Configurar a impressora.");
                 return;
             }
 
-            portaAberta = true;
+            if (!Enum.IsDefined(typeof(EnumPortas), porta))
+            {
+                logger.Error("Problema ao abrir comunicação com a impressora. Porta não configurada!");
+                return;
+            }
+
+            if (porta == "ETHERNET")
+            {
+                Retorno = MP2032.IniciaPorta(ipImpressora); //inicia a porta com o IP digitado
+            }
+            else
+            {
+                Retorno = MP2032.IniciaPorta(porta);//inicia a porta com o valor da combo (exceto ethernet)
+            }
+
+            if (Retorno <= 0) //testa se a conexão da porta foi bem sucedido
+            {
+                logger.Error("Não foi possivel conectar na impressora.");
+                return;
+            }
+            else
+            {
+                logger.Info("Impressora conectada com sucesso.");
+            }       
         } 
 
-        private void FecharDispositivo(string porta)
+        private void FecharDispositivo()
         {
-            int retorno;
+            Retorno = MP2032.FechaPorta();
 
-            retorno = MEGENCOM32_FecharDispositivo(porta);
-
-            if (retorno != (int) codigoRetonoMecaf.MECAFCOD_RET_SUCESSO)
+            if (Retorno <= 0)
             {
-                logger.Error("Problema ao fechar comunicação com a impressora.Erro:{0}", retorno);
+                logger.Error("Não foi possivel fechar a porta da impressora.");
                 return;
             }
 
-            portaAberta = false;
+            logger.Error("Porta da impressora fechada com sucesso.");
         }
 
         public void EscreverNoDispositivo(string texto)
         {
-            int retorno;
-            string buffer;
-            long? bytesEscritos = null;
-            string ativaNegrito;
-            string desativaNegrito;
+            AbrirDispositivo();
 
-            desativaNegrito = ((char)27 + "E");
-            ativaNegrito = ((char)27 + "F");
+            Retorno = MP2032.BematechTX(texto + "\r\n\r\n");      
 
-            buffer = ativaNegrito + texto + desativaNegrito + ((char)10);
-
-            retorno = MEGENCOM32_EscrevernoDispositivo("COM4", buffer, 24, ref bytesEscritos);
-
-            if (retorno != (int) codigoRetonoMecaf.MECAFCOD_RET_SUCESSO)
+            if (Retorno <= 0) //testa se a conexão da porta foi bem sucedido
             {
-                logger.Error("Problema ao escrever na impressora.Erro:{0}", retorno);
+                logger.Error("Não foi possivel imprimir na impressora.");
+                return;
+            }
+            
+        }
+
+
+        public void AcionarGuilhotinaTotal()
+        {
+            Retorno = MP2032.AcionaGuilhotina(1);
+
+            if (Retorno <= 0) //testa se a conexão da porta foi bem sucedido
+            {
+                logger.Error("Não foi possivel acionar a guilhotina total.");
+                return;
+            }
+        }
+
+        public void AcionarGuilhotinaParcial()
+        {
+            Retorno = MP2032.AcionaGuilhotina(0);
+
+            if (Retorno <= 0) //testa se a conexão da porta foi bem sucedido
+            {
+                logger.Error("Não foi possivel acionar a guilhotina parcial.");
                 return;
             }
         }
@@ -96,7 +121,7 @@ namespace FrangoFone.Infraestructure
             {
                 if (disposing)
                 {
-                    FecharDispositivo("COM4");
+                    FecharDispositivo();
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.

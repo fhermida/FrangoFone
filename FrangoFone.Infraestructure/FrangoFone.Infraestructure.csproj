@@ -51,14 +51,21 @@
   <ItemGroup>
     <Compile Include="CPFAttribute.cs" />
     <Compile Include="ImpressaoCupom.cs" />
+    <Compile Include="MP2032DLL\EnumPortas.cs" />
+    <Compile Include="MP2032DLL\MP2032.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServicoHttp.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="MP2032DLL\mp2032.ini" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="MP2032DLL\mp2032.dll" />
+    <Content Include="MP2032DLL\SiUSBXp.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

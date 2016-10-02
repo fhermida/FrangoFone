@@ -83,6 +83,11 @@ namespace FrangoFone.Repository.Concrete
             return dbcontext.ItemPedidoSet.FirstOrDefault(p => p.Id == id);
         }
 
+        public List<ItemPedidoSet> ObterPorIdPedido(int idPedido)
+        {
+            return dbcontext.ItemPedidoSet.Include("ProdutoSet").Where(p => p.PedidoId == idPedido).ToList();
+        }
+
         public List<ItemPedidoSet> ObterTodos()
         {
             return dbcontext.ItemPedidoSet.ToList();

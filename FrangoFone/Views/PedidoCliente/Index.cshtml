@@ -84,7 +84,7 @@
             </td>
             <td>
                 <a class="btn-link" data-toggle="collapse" data-target="#detalhesPedido_@item.IdPedido" aria-expanded="false">Detail</a> |
-                <a tabindex="0" data-placement="top" id="@item.IdPedido" class="btn-link" role="button" data-toggle="popover" data-trigger="focus" title="Alterar Status Pedido">Status</a>
+                <a tabindex="0" data-placement="top" id="@item.IdPedido" class="btn-link" role="button" data-toggle="popover" data-trigger="click" title="Alterar Status Pedido">Status</a>
             </td>
         </tr>
         <tr>
@@ -174,7 +174,7 @@
         $(document).on("click", "a[name='btnStatus']", function () {
             var status = $(this).text();
             var idPedido = $(this).attr("id").split("_")[1];
-            
+
             $.getJSON('@Url.Action("AtualizaStatusPedido")', { idPedido: idPedido, status: status }, function (data) {
 
                 if (data.sucesso) {

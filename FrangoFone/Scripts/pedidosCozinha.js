@@ -8,16 +8,46 @@ Cozinha.Application = function () {
         connector.server.atualizarPedidos(pedido);
     }
 
-    self.AtualizarPedidosCozinha = function ($container, data) {
-        //var pedido = $.parseJSON(data);
+    self.RemoverPedido = function (idPedido, status) {
+        connector.server.removerPedido(idPedido, status);
+    }
 
-        console.log(data);
+    self.AtualizarPedidosCozinha = function ($container, data) {
+
+        var html = '<div id="panel_' + data.IdPedido + '" class="panel panel-primary">' +
+                        '<div class="panel-heading">' +
+                            '<h3 class="panel-title">Id Pedido:' + data.IdPedido + '    Cliente:' + data.NomeCliente +
+                            '<input type="button" name="pronto" id="pronto_' + data.IdPedido + '" value="Pronto" class="btn btn-default btn-xs pull-right" /></h3>' +
+                        '</div>' +
+                        '<div class="panel-body">' +
+                            '<table class="table" id="detalhesPedido">' +
+                                '<tr>' +
+                                    '<th>Prato</th>' +
+                                    '<th>Descrição</th>' +
+                                    '<th>Quantidade</th>' +
+                               '</tr>';
+
+        for (var i = 0; i < data.Itens.length; i++) {
+
+                        html = html + '<tr>' +
+                                       '<td>' + data.Itens[i].NomeProduto + '</td>' +
+                                       '<td>' + data.Itens[i].Descricao + '</td>' +
+                                       '<td>' + data.Itens[i].Quantidade + '</td>' +
+                                   '</tr>';
+                    }
         
-        var html = '<div class="container-fluid">' +
-            '<div class="row">' +
-            '<div class="col-sm-8" style="background-color: lavender;">Cliente:  Endereco:  </div> </div>' +
-            '</div>   <div class="container-fluid"></div>';
-        $($container).append(html);
+        html = html + '</table>' +
+                    '</div>'+
+                '</div>';
+        $($container).prepend(html);
+
+        $.playSound("../Scripts/alarm_pedido");
+        
+    }
+
+    self.RemoverPedidoCozinha = function ($container, data) {
+        console.log(data);
+        $($container).find(data).remove();
     }
     
 }

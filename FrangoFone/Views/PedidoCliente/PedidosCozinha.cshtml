@@ -1,6 +1,6 @@
 ﻿@using FrangoFone.Models
 @using FrangoFone.Domain
-@model PedidoClienteViewModel
+@model IEnumerable<DetalhePedidoCozinhaViewModel>
 
 @{
     ViewBag.Title = "Pedidos Cozinha";
@@ -10,13 +10,50 @@
 <h2>Pedidos Cozinha</h2>
 
 <div id="listOrders" class="">
+   
+    @foreach (var item in Model)
+    {
+        <div id="panel_@item.IdPedido" class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Id Pedido:@item.IdPedido    Cliente:@item.NomeCliente
+                    <input type="button" name="pronto" id="pronto_@item.IdPedido" value="Pronto" class="btn btn-default btn-xs pull-right" />
+                </h3>
+            </div>
+            <div class="panel-body">
+                <table class="table" id="detalhesPedido">
+                    <tr>
+                        <th>
+                            Prato
+                        </th>
+                        <th>
+                            Descrição
+                        </th>
+                        <th>
+                            Quantidade
+                        </th>
+                    </tr>
+                    @foreach (var itens in item.Itens)
+                    {
+                        <tr>
+                            <td>@itens.NomeProduto</td>
+                            <td>@itens.Descricao</td>
+                            <td>@itens.Quantidade</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    }
+    
 
 </div>
 
 <script src="~/Scripts/jquery.signalR-2.1.2.min.js" ></script>
+<script src="~/Scripts/jquery.playSound.js"></script>
 <script src="~/Scripts/app-connect-signalr.js"></script>
 <script src="~/Scripts/PedidosCozinha.js"></script>
-<script src="/signalr/hubs" type="text/javascript"></script>
+<script src="~/signalr/hubs" type="text/javascript"></script>
 
 <script type="text/javascript">
     $(function () {
@@ -26,6 +63,18 @@
         conn.client.AtualizarPedidosCozinha = function (pedido) {
             app.AtualizarPedidosCozinha($("#listOrders"), pedido);
         }
+
+        conn.client.RemoverPedidoCozinha = function (idPedido) {
+            app.RemoverPedidoCozinha($("#listOrders"), "#panel_"+idPedido);
+        }
+
+
+        $(document).on("click", "input[name=pronto]", function () {
+            var status = "Produzido";
+            var idPedido = $(this).attr("id").split("_")[1];
+
+            $.getJSON('@Url.Action("RemoverPedidoCozinha")', { idPedido: idPedido, status: status });
+        });
     });
 
 </script>

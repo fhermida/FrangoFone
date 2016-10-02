@@ -7,9 +7,13 @@ using FrangoFone.Repository.Concrete;
 using FrangoFone.Repository.Interface;
 using FrangoFone.Providers;
 using FrangoFone.Domain;
-using FrangoFone.Models;         
+using FrangoFone.Models;
 using System.Web.Security;
 using FrangoFone.EntryPoint.SignalR;
+using FrangoFone.Infraestructure;
+using System.Web.Hosting;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FrangoFone.EntryPoint.Controllers
 {
@@ -24,6 +28,7 @@ namespace FrangoFone.EntryPoint.Controllers
         private ITipoPagamentoRepository tipoPagamentoRepository;
         private IPedidoRepository pedidoRepository;
         private IUsuarioRepository usuarioRepository;
+        private IItemPedidoRepository itemPedidoRepository;
 
         public PedidoClienteController()
         {
@@ -34,6 +39,7 @@ namespace FrangoFone.EntryPoint.Controllers
             tipoPagamentoRepository = new TipoPagamentoRepository();
             pedidoRepository = new PedidoRepository();
             usuarioRepository = new UsuarioRepository();
+            itemPedidoRepository = new ItemPedidoRepository();
         }
 
         // GET: PedidoCliente
@@ -119,8 +125,7 @@ namespace FrangoFone.EntryPoint.Controllers
             }
            
             if (ModelState.IsValid)
-            {
-                IPedidoRepository pedidoRepository = new PedidoRepository();
+            {                                                                
                 IItemPedidoRepository itemPedidoRepository = new ItemPedidoRepository();
 
                 PedidoSet pedido = new PedidoSet();
@@ -129,7 +134,7 @@ namespace FrangoFone.EntryPoint.Controllers
                 pedido.Endereco_Id = model.Endereco;
                 pedido.TipoEntregaId = model.TipoEntrega;
                 pedido.TipoPagamentoId = model.TipoPagamento;
-                pedido.Status = StatusPedidoEnum.Aberto;
+                pedido.Status = StatusPedidoEnum.Realizado;
                 pedido.Obs = model.Obs;
                 pedido.UsuarioId = usuarioRepository.ObterPorLogin(FormsAuthentication.Decrypt(Request.Cookies[FormsAuthentication.FormsCookieName].Value).Name).Id;
 
@@ -148,24 +153,40 @@ namespace FrangoFone.EntryPoint.Controllers
 
                 pedido.ItemPedidoSet = itensPedido;
                 pedidoRepository.Inserir(pedido);
-
-                //Imprimindo cupom não fiscal
-                //ImpressaoCupom imprimir = new ImpressaoCupom();
-                //imprimir.EscreverNoDispositivo(pedido.Obs);
-
+                                           
+                //Enviando pedido para cozinha                
                 PedidosCozinha pedidosNaCozinha = new PedidosCozinha();
-                pedidosNaCozinha.AtualizarPedidos(model);
-                
+                pedidosNaCozinha.AtualizarPedidos(pedido);
+
+                //imprimindo cupom 
+                ImprimirCupom(model.Cliente, model.Endereco, pedido.Id);
+ 
                 //retorna id do pedido pra ser exibido na tela.
                 ViewBag.PedidoCriado = pedido.Id;
-
-                //return View("create");
+                                             
             }
 
             CarregarDropDown(model);
             return View(model);
         }
 
+        private void ImprimirCupom(int idCliente, int idEndereco, int idPedido)
+        {
+            ClienteSet cliente = clienteRepository.ObterPorId(idCliente);
+            EnderecoSet endereco = enderecoRepository.ObterPorId(idEndereco);
+            PedidoSet pedido = pedidoRepository.ObterPorId(idPedido);
+            List<ItemPedidoSet> itensPedido = itemPedidoRepository.ObterPorIdPedido(idPedido);
+
+            CupomViewModel cupom = new CupomViewModel(cliente, endereco, pedido, itensPedido);
+
+            //Imprimindo cupom não fiscal
+            ImpressaoCupom imprimir = new ImpressaoCupom();
+            imprimir.EscreverNoDispositivo(cupom.MontaCupom("loja"));
+            imprimir.AcionarGuilhotinaParcial();
+            imprimir.EscreverNoDispositivo(cupom.MontaCupom("entrega"));
+            imprimir.AcionarGuilhotinaTotal();
+           
+        }
 
         private void CarregarDropDown(PedidoClienteViewModel model)
         {
@@ -214,10 +235,46 @@ namespace FrangoFone.EntryPoint.Controllers
             return Json(listEnums, JsonRequestBehavior.AllowGet);
         }
 
+        public void RemoverPedidoCozinha(int idPedido, StatusPedidoEnum status)
+        {
+            PedidoSet pedido = pedidoRepository.ObterPorId(idPedido);
+            pedido.Status = status;
+            pedidoRepository.Atualizar(pedido);
+
+            PedidosCozinha pedidosNaCozinha = new PedidosCozinha();
+            pedidosNaCozinha.RemoverPedido(idPedido, status);
+        }
+
         [HttpGet]
         public ActionResult PedidosCozinha()
         {
-            return View("PedidosCozinha");
+            List<DetalhePedidoCozinhaViewModel> detalhesCozinha = new List<DetalhePedidoCozinhaViewModel>();
+
+            List<PedidoSet> pedidos = pedidoRepository.ObterTodos().Where(p => p.Status == StatusPedidoEnum.Realizado && p.ItemPedidoSet.Count(i=> i.ProdutoSet.AreaPedidoId == 1) > 0).OrderByDescending(o=> o.Id).ToList();
+
+            foreach (var item in pedidos)
+            {
+                DetalhePedidoCozinhaViewModel detalhePedido = new DetalhePedidoCozinhaViewModel();
+                detalhePedido.IdPedido = item.Id;
+                detalhePedido.NomeCliente = item.ClienteSet.Nome;
+                detalhePedido.Itens = new List<DetalheItemPedidoCozinhaViewModel>();
+
+                foreach (var itens in item.ItemPedidoSet)
+                {
+                    if (itens.ProdutoSet.AreaPedidoId != 1)
+                        continue;
+
+                    DetalheItemPedidoCozinhaViewModel detalheItem = new DetalheItemPedidoCozinhaViewModel();
+                    detalheItem.NomeProduto = itens.ProdutoSet.Nome;
+                    detalheItem.Descricao = itens.ProdutoSet.Descricao;
+                    detalheItem.Quantidade = itens.Quantidade;
+                    detalhePedido.Itens.Add(detalheItem);
+                }                                       
+
+                detalhesCozinha.Add(detalhePedido);
+            }
+                      
+            return View(detalhesCozinha);
         }
 
 

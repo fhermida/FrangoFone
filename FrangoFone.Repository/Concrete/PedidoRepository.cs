@@ -80,7 +80,7 @@ namespace FrangoFone.Repository.Concrete
 
         public PedidoSet ObterPorId(int id)
         {
-            return dbcontext.PedidoSet.FirstOrDefault(p => p.Id == id);
+            return dbcontext.PedidoSet.Include("TipoPagamentoSet").Include("TipoEntregaSet").FirstOrDefault(p => p.Id == id);
         }
 
         public List<PedidoSet> ObterTodos()
