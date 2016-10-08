@@ -41,6 +41,7 @@ namespace FrangoFone.Models
             cupom = string.Concat(cupom, "#################################################");
             cupom = string.Concat(cupom, Convert.ToChar(10));
             cupom = string.Concat(cupom, string.Format("Pedido: {0}", Pedido.Id), Convert.ToChar(10));
+            cupom = string.Concat(cupom, string.Format("Data/Hora: {0}", Pedido.DataPedido), Convert.ToChar(10));
             cupom = string.Concat(cupom, string.Format("Nome: {0}", Cliente.Nome), Convert.ToChar(10));
             cupom = string.Concat(cupom, string.Format("End: {0}, {1}, {2}", Endereco.Logradouro, Endereco.Numero, Endereco.Complemento), Convert.ToChar(10));
             cupom = string.Concat(cupom, string.Format("Bairro: {0}/{1}", Endereco.Bairro, Endereco.Municipio), Convert.ToChar(10));

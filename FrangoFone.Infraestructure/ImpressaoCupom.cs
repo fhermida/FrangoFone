@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using NLog;
 using System.Runtime.InteropServices;
-using FrangoFone.Infraestructure.MP2032DLL;
+using FrangoFone.Infraestructure.BematechDLL;
 using System.Configuration;
 
 namespace FrangoFone.Infraestructure
@@ -14,21 +14,27 @@ namespace FrangoFone.Infraestructure
    
     public class ImpressaoCupom : IDisposable
     {
-        private Logger logger = LogManager.GetCurrentClassLogger();
+        private readonly Logger logger;
         private int Retorno = 0;
-        private string porta = ConfigurationManager.AppSettings["PortaImpressao"];
-        private string ipImpressora = ConfigurationManager.AppSettings["IpImpressora"];
+        private readonly string porta;
+        private readonly string ipImpressora;
+        private readonly string plataformaImpressao;
+        private readonly IBematechDLL bematechDLL;
 
         public ImpressaoCupom()
         {
-            
+            porta = ConfigurationManager.AppSettings["PortaImpressao"];
+            ipImpressora = ConfigurationManager.AppSettings["IpImpressora"];
+            logger = LogManager.GetCurrentClassLogger();
+            plataformaImpressao = ConfigurationManager.AppSettings["PlataformaImpressao"];
+            bematechDLL = FactoryBematechDLL.Instancia.Criar(plataformaImpressao);
         }
 
         private void AbrirDispositivo()
         {
 
 
-            Retorno = MP2032.ConfiguraModeloImpressora(7);
+            Retorno = bematechDLL.ConfiguraModeloImpressora(7);
 
             if (Retorno <= 0)
             {
@@ -44,11 +50,11 @@ namespace FrangoFone.Infraestructure
 
             if (porta == "ETHERNET")
             {
-                Retorno = MP2032.IniciaPorta(ipImpressora); //inicia a porta com o IP digitado
+                Retorno = bematechDLL.IniciaPorta(ipImpressora); //inicia a porta com o IP digitado
             }
             else
             {
-                Retorno = MP2032.IniciaPorta(porta);//inicia a porta com o valor da combo (exceto ethernet)
+                Retorno = bematechDLL.IniciaPorta(porta);//inicia a porta com o valor da combo (exceto ethernet)
             }
 
             if (Retorno <= 0) //testa se a conexão da porta foi bem sucedido
@@ -64,7 +70,7 @@ namespace FrangoFone.Infraestructure
 
         private void FecharDispositivo()
         {
-            Retorno = MP2032.FechaPorta();
+            Retorno = bematechDLL.FechaPorta();
 
             if (Retorno <= 0)
             {
@@ -79,7 +85,7 @@ namespace FrangoFone.Infraestructure
         {
             AbrirDispositivo();
 
-            Retorno = MP2032.BematechTX(texto + "\r\n\r\n");      
+            Retorno = bematechDLL.BematechTX(texto + "\r\n\r\n");      
 
             if (Retorno <= 0) //testa se a conexão da porta foi bem sucedido
             {
@@ -92,7 +98,7 @@ namespace FrangoFone.Infraestructure
 
         public void AcionarGuilhotinaTotal()
         {
-            Retorno = MP2032.AcionaGuilhotina(1);
+            Retorno = bematechDLL.AcionaGuilhotina(1);
 
             if (Retorno <= 0) //testa se a conexão da porta foi bem sucedido
             {
@@ -103,7 +109,7 @@ namespace FrangoFone.Infraestructure
 
         public void AcionarGuilhotinaParcial()
         {
-            Retorno = MP2032.AcionaGuilhotina(0);
+            Retorno = bematechDLL.AcionaGuilhotina(0);
 
             if (Retorno <= 0) //testa se a conexão da porta foi bem sucedido
             {

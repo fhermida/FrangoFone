@@ -144,7 +144,7 @@ namespace FrangoFone.EntryPoint.Controllers
         {
             ViewBag.ClienteId = clienteRepository.ObterTodos();
 
-            string url = ConfigurationManager.AppSettings["WsCEP"].Replace("xxxxxxxx", cep);
+            string url = string.Format(ConfigurationManager.AppSettings["WsCEP"], cep);
             
             string conteudo = "";
             Task<string> retorno;

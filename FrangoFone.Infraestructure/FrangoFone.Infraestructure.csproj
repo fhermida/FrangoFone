@@ -49,23 +49,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BematechDLL\Bematech32.cs" />
+    <Compile Include="BematechDLL\Bematech64.cs" />
+    <Compile Include="BematechDLL\FactoryBematechDLL.cs" />
+    <Compile Include="BematechDLL\IBematechDLL.cs" />
+    <Compile Include="BematechDLL\MP2064.cs" />
     <Compile Include="CPFAttribute.cs" />
     <Compile Include="ImpressaoCupom.cs" />
-    <Compile Include="MP2032DLL\EnumPortas.cs" />
-    <Compile Include="MP2032DLL\MP2032.cs" />
+    <Compile Include="BematechDLL\EnumPortas.cs" />
+    <Compile Include="BematechDLL\MP2032.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServicoHttp.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="MP2032DLL\mp2032.ini" />
+    <None Include="BematechDLL\DLLs\32Bits\mp2032.ini" />
+    <None Include="BematechDLL\DLLs\64Bit\mp2064.ini" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="MP2032DLL\mp2032.dll" />
-    <Content Include="MP2032DLL\SiUSBXp.dll" />
+    <Content Include="BematechDLL\DLLs\32Bits\mp2032.dll" />
+    <Content Include="BematechDLL\DLLs\32Bits\SiUSBXp.dll" />
+    <Content Include="BematechDLL\DLLs\64Bit\mp2064.dll" />
+    <Content Include="BematechDLL\DLLs\64Bit\SiUSBXp.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

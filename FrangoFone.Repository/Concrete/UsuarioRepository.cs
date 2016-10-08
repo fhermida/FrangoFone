@@ -78,8 +78,8 @@ namespace FrangoFone.Repository.Concrete
         }
 
         public UsuarioSet ObterPorLogin(string login)
-        {
-            return dbContext.UsuarioSet.FirstOrDefault(p => p.Login == login);
+        {            
+            return dbContext.UsuarioSet.Include("PermissaoSet").FirstOrDefault(p => p.Login == login);
         }
 
         public List<UsuarioSet> ObterPorNome(string nome)

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FrangoFone.Infraestructure.MP2032DLL
+namespace FrangoFone.Infraestructure.BematechDLL
 {
     public enum EnumPortas
     {
